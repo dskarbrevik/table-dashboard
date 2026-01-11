@@ -1,7 +1,7 @@
 {
 	"name": "table-dashboard",
-	"version": "1.0.6",
-	"description": "Dashboard visualizations from markdown tables.",
+	"version": "1.0.7",
+	"description": "Create dynamic dashboard visualizations from your markdown tables.",
 	"main": "main.js",
 	"type": "module",
 	"scripts": {

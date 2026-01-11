@@ -1,7 +1,7 @@
 {
 	"id": "table-dashboard",
 	"name": "Table Dashboard",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"minAppVersion": "0.15.0",
 	"description": "Create dynamic dashboard visualizations from your markdown tables.",
 	"author": "Data Goose",

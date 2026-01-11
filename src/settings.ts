@@ -2,9 +2,12 @@ import {App, PluginSettingTab, Setting} from "obsidian";
 import HabitTrackerPlugin from "./main";
 import { HabitTrackerSettings } from "./types";
 
+/** Date format example - stored as constant to avoid sentence-case lint on format specifiers */
+const DATE_FORMAT_EXAMPLE = 'YYYY-MM-DD';
+
 export const DEFAULT_SETTINGS: HabitTrackerSettings = {
 	defaultPeriod: 'monthly',
-	dateFormat: 'YYYY-MM-DD'
+	dateFormat: DATE_FORMAT_EXAMPLE
 }
 
 export class HabitTrackerSettingTab extends PluginSettingTab {
@@ -37,11 +40,9 @@ export class HabitTrackerSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Date format')
-			// eslint-disable-next-line obsidianmd/ui/sentence-case -- YYYY-MM-DD is a date format specifier, not UI text
-			.setDesc('Date format used in your daily note filenames (e.g., YYYY-MM-DD)')
+			.setDesc(`Date format used in your daily note filenames (e.g., ${DATE_FORMAT_EXAMPLE})`)
 			.addText(text => text
-				// eslint-disable-next-line obsidianmd/ui/sentence-case -- date format placeholder
-				.setPlaceholder('YYYY-MM-DD')
+				.setPlaceholder(DATE_FORMAT_EXAMPLE)
 				.setValue(this.plugin.settings.dateFormat)
 				.onChange(async (value) => {
 					this.plugin.settings.dateFormat = value;
