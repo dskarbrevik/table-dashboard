@@ -1,0 +1,337 @@
+/*
+
+This CSS file will be included with your plugin, and
+available in the app when your plugin is enabled.
+
+If your plugin does not need CSS, delete this file.
+
+*/
+
+/* Habit Tracker Styles */
+
+/* Grid Layout for Dashboards */
+.habit-tracker-grid-container {
+	display: grid;
+	gap: 1em;
+	margin: 1em 0;
+}
+
+.habit-tracker-grid-container[data-columns="1"] {
+	grid-template-columns: 1fr;
+}
+
+.habit-tracker-grid-container[data-columns="2"] {
+	grid-template-columns: repeat(2, 1fr);
+}
+
+.habit-tracker-grid-container[data-columns="3"] {
+	grid-template-columns: repeat(3, 1fr);
+}
+
+.habit-tracker-grid-container[data-columns="4"] {
+	grid-template-columns: repeat(4, 1fr);
+}
+
+/* Responsive grid */
+@media (max-width: 768px) {
+	.habit-tracker-grid-container[data-columns="2"],
+	.habit-tracker-grid-container[data-columns="3"],
+	.habit-tracker-grid-container[data-columns="4"] {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* Compact List Layout for Dashboards */
+.habit-tracker-compact-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	margin: 1em 0;
+	padding: 1em;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 8px;
+	background-color: var(--background-primary-alt);
+}
+
+.habit-tracker-compact-list .habit-tracker-container {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.75em 0;
+	margin: 0;
+	gap: 1em;
+	min-height: 40px;
+	border: none;
+	border-radius: 0;
+	background-color: transparent;
+}
+
+/* Add divider between items except last */
+.habit-tracker-compact-list .habit-tracker-container:not(:last-child) {
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.habit-tracker-compact-list .habit-tracker-label {
+	flex: 0 0 220px;
+	width: 220px;
+	max-width: 220px;
+	margin: 0;
+	font-size: 0.95em;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-align: left;
+}
+
+.habit-tracker-compact-list .habit-progress-bar-container {
+	flex: 1 1 auto;
+	margin: 0;
+	min-width: 150px;
+}
+
+.habit-tracker-compact-list .habit-progress-bar-bg {
+	height: 24px;
+}
+
+.habit-tracker-compact-list .habit-progress-text {
+	font-size: 0.85em;
+}
+
+/* For counter/percentage types in compact list */
+.habit-tracker-compact-list .habit-counter-container,
+.habit-tracker-compact-list .habit-percentage-container {
+	padding: 0;
+	text-align: right;
+	flex: 0 0 auto;
+	min-width: 80px;
+}
+
+.habit-tracker-compact-list .habit-counter-value,
+.habit-tracker-compact-list .habit-percentage-value {
+	font-size: 1.5em;
+}
+
+.habit-tracker-compact-list .habit-counter-goal,
+.habit-tracker-compact-list .habit-percentage-detail {
+	font-size: 0.8em;
+	margin-top: 0.2em;
+}
+
+/* Hide footer in compact list */
+.habit-tracker-compact-list .habit-tracker-footer {
+	display: none;
+}
+
+.habit-tracker-container {
+	padding: 1em;
+	margin: 1em 0;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 8px;
+	background-color: var(--background-primary-alt);
+}
+
+/* Grid item - reset margin and ensure consistent height */
+.habit-tracker-grid-container .habit-tracker-container {
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	min-height: 120px;
+}
+
+/* Center content vertically in grid cells */
+.habit-tracker-grid-container .habit-progress-bar-container,
+.habit-tracker-grid-container .habit-counter-container,
+.habit-tracker-grid-container .habit-percentage-container,
+.habit-tracker-grid-container .habit-streak-container {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.habit-tracker-label {
+	font-size: 1.1em;
+	font-weight: 600;
+	margin-bottom: 0.75em;
+	color: var(--text-normal);
+}
+
+/* Progress Bar Styles */
+.habit-progress-bar-container {
+	position: relative;
+	margin: 0.5em 0;
+}
+
+.habit-progress-bar-bg {
+	width: 100%;
+	height: 30px;
+	background-color: var(--background-secondary);
+	border-radius: 15px;
+	overflow: hidden;
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.habit-progress-bar-fill {
+	height: 100%;
+	background: linear-gradient(90deg, var(--interactive-accent), var(--interactive-accent-hover));
+	transition: width 0.3s ease, background 0.3s ease;
+	border-radius: 15px;
+}
+
+/* Completed state - vibrant green */
+.habit-progress-bar-fill.completed {
+	background: linear-gradient(90deg, #10b981, #059669);
+	box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+
+.habit-progress-text {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-weight: 600;
+	color: var(--text-normal);
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+	font-size: 0.9em;
+}
+
+/* Counter Styles */
+.habit-counter-container {
+	text-align: center;
+	padding: 0.5em;
+}
+
+.habit-counter-value {
+	font-size: 2.5em;
+	font-weight: 700;
+	color: var(--interactive-accent);
+	line-height: 1;
+}
+
+.habit-counter-goal {
+	margin-top: 0.5em;
+	font-size: 0.9em;
+	color: var(--text-muted);
+}
+
+/* Percentage Styles */
+.habit-percentage-container {
+	text-align: center;
+	padding: 0.5em;
+}
+
+.habit-percentage-value {
+	font-size: 2.5em;
+	font-weight: 700;
+	color: var(--interactive-accent);
+	line-height: 1;
+}
+
+.habit-percentage-detail {
+	margin-top: 0.5em;
+	font-size: 0.9em;
+	color: var(--text-muted);
+}
+
+/* Streak Styles */
+.habit-streak-container {
+	text-align: center;
+	padding: 0.5em;
+}
+
+.habit-streak-value {
+	font-size: 2.5em;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.habit-streak-label {
+	margin-top: 0.5em;
+	font-size: 0.9em;
+	color: var(--text-muted);
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+.habit-streak-total {
+	margin-top: 0.75em;
+	font-size: 0.9em;
+	color: var(--text-faint);
+}
+
+/* Footer Styles */
+.habit-tracker-footer {
+	margin-top: 1em;
+	padding-top: 0.75em;
+	border-top: 1px solid var(--background-modifier-border);
+	font-size: 0.85em;
+	color: var(--text-muted);
+	text-align: center;
+}
+
+/* Error Styles */
+.habit-tracker-error {
+	padding: 1em;
+	background-color: var(--background-modifier-error);
+	border-left: 3px solid var(--text-error);
+	border-radius: 4px;
+	color: var(--text-error);
+	font-family: var(--font-monospace);
+	font-size: 0.9em;
+}
+
+/* Line Plot Styles */
+.habit-line-plot-container {
+	padding: 1em 0;
+	display: flex;
+	justify-content: center;
+}
+
+.habit-line-plot-svg {
+	max-width: 100%;
+	height: auto;
+}
+
+.habit-line-plot-grid {
+	stroke: var(--background-modifier-border);
+	stroke-width: 1;
+	stroke-dasharray: 2, 2;
+}
+
+.habit-line-plot-label {
+	fill: var(--text-muted);
+	font-size: 10px;
+}
+
+.habit-line-plot-goal {
+	stroke: var(--text-error);
+	stroke-width: 2;
+	stroke-dasharray: 5, 5;
+	opacity: 0.5;
+}
+
+.habit-line-plot-path {
+	fill: none;
+	stroke: var(--interactive-accent);
+	stroke-width: 2;
+}
+
+.habit-line-plot-point {
+	fill: var(--interactive-accent);
+	stroke: var(--background-primary);
+	stroke-width: 2;
+	cursor: pointer;
+}
+
+.habit-line-plot-point:hover {
+	fill: var(--interactive-accent-hover);
+	r: 6;
+}
+
+.habit-line-plot-empty {
+	text-align: center;
+	padding: 2em;
+	color: var(--text-muted);
+	font-style: italic;
+}
+
