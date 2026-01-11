@@ -1,20 +1,20 @@
-# Habit Progress Tracker
+# Table Dashboard
 
-Track habits and visualize progress across your Obsidian vault with customizable progress bars, counters, and more.
+Create dynamic dashboard visualizations from your markdown tables. Progress bars, counters, streaks, and more — all powered by your existing data.
 
 <!-- Hero image placeholder -->
 <p align="center">
-	<img src="assets/hero-demo.png" alt="Habit Progress Tracker Demo" width="700"/>
+	<img src="assets/hero-demo.png" alt="Table Dashboard Demo" width="700"/>
 </p>
 
 ## Features
 
 - 📊 **Multiple Visualizations**: Progress bars, counters, percentages, streaks, line plots
 - 📁 **Flexible Sources**: Current file, specific file, or entire folder
-- 📋 **Table Support**: Extract data from markdown tables
+- 📋 **Table-Powered**: Extract and visualize data from markdown tables
 - 🏷️ **Table Tagging**: Filter which tables to scan using HTML comments
 - 🎯 **Dynamic Goals**: Extract goals from table columns
-- 📅 **Time Periods**: Daily, weekly, monthly, yearly, or all-time tracking
+- 📅 **Time Periods**: Daily, weekly, monthly, yearly, or all-time filtering
 - 🎨 **Layout Options**: Grid or compact-list for multi-widget dashboards
 - ➕ **Aggregation**: Count, sum, average, min, max
 
@@ -23,7 +23,7 @@ Track habits and visualize progress across your Obsidian vault with customizable
 ### Manual Installation
 
 1. Download `main.js`, `manifest.json`, and `styles.css` from releases
-2. Create folder: `<vault>/.obsidian/plugins/habit-progress-tracker/`
+2. Create folder: `<vault>/.obsidian/plugins/table-dashboard/`
 3. Copy files into that folder
 4. Reload Obsidian and enable the plugin
 
@@ -31,8 +31,8 @@ Track habits and visualize progress across your Obsidian vault with customizable
 
 ```bash
 cd <vault>/.obsidian/plugins/
-git clone <repo-url> habit-progress-tracker
-cd habit-progress-tracker
+git clone <repo-url> table-dashboard
+cd table-dashboard
 npm install
 npm run build
 ```
@@ -41,7 +41,7 @@ npm run build
 
 ### Simple Table Tracker
 
-Track exercise from a table in the current file:
+Visualize data from a table in the current file:
 
 ```markdown
 <!-- table-tag: weekly -->

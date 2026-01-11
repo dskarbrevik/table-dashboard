@@ -1,7 +1,7 @@
 {
-	"name": "obsidian-progress-tracker",
+	"name": "table-dashboard",
 	"version": "1.0.0",
-	"description": "This is a markdown table visualization plugin for Obsidian (https://obsidian.md)",
+	"description": "Dashboard visualizations from markdown tables.",
 	"main": "main.js",
 	"type": "module",
 	"scripts": {

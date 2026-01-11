@@ -1,9 +1,9 @@
 {
-	"id": "habit-progress-tracker",
-	"name": "Habit Progress Tracker",
+	"id": "table-dashboard",
+	"name": "Table Dashboard",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Track habits and progress across your notes with progress bars and counters.",
+	"description": "Dashboard visualizations from markdown tables.",
 	"author": "Data Goose",
 	"authorUrl": "https://github.com/dskarbrevik",
 	"isDesktopOnly": false
