@@ -118,7 +118,7 @@ export class TrackerRenderer {
 		
 		const labelEl = streakContainer.createDiv({ cls: 'habit-streak-label' });
 		if (hasStreak) {
-			labelEl.textContent = 'day streak';
+			labelEl.textContent = 'Day streak';
 		} else {
 			labelEl.textContent = data.count === 1 ? 'completed' : 'completed';
 		}

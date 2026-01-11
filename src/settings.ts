@@ -37,8 +37,10 @@ export class HabitTrackerSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Date format')
+			// eslint-disable-next-line obsidianmd/ui/sentence-case -- YYYY-MM-DD is a date format specifier, not UI text
 			.setDesc('Date format used in your daily note filenames (e.g., YYYY-MM-DD)')
 			.addText(text => text
+				// eslint-disable-next-line obsidianmd/ui/sentence-case -- date format placeholder
 				.setPlaceholder('YYYY-MM-DD')
 				.setValue(this.plugin.settings.dateFormat)
 				.onChange(async (value) => {

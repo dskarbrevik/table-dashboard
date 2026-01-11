@@ -47,7 +47,7 @@ export class FileScanner {
 				return await this.scanFolder(config, path!);
 			default: {
 				const exhaustiveCheck: never = type;
-				throw new Error(`Unknown source type: ${exhaustiveCheck}`);
+				throw new Error(`Unknown source type: ${String(exhaustiveCheck)}`);
 			}
 		}
 	}
@@ -354,7 +354,7 @@ export class FileScanner {
 		if (!cellValue) return null;
 
 		switch (valueType) {
-			case 'numeric':
+			case 'numeric': {
 				// Look for numeric values, be resilient to non-numeric content
 				const numMatch = cellValue.match(/-?\d+\.?\d*/);
 				if (numMatch) {
@@ -362,6 +362,7 @@ export class FileScanner {
 					return isNaN(num) ? null : num;
 				}
 				return null;
+			}
 
 			case 'any':
 				// Any non-empty cell counts as 1
@@ -490,7 +491,7 @@ export class FileScanner {
 
 		let streak = 0;
 		const today = moment().startOf('day');
-		let checkDate = today.clone();
+		const checkDate = today.clone();
 
 		// Count backwards from today
 		for (const date of uniqueDates) {
