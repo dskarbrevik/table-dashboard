@@ -1,7 +1,7 @@
 
 # Widget Screenshot Demo (Table-Based)
 
-This file demonstrates all table-based progress-tracker widgets as shown in the README, including the required HTML comment tags and tableTag parameters.
+This file demonstrates all table-based table-dashboard widgets as shown in the README, including the required HTML comment tags and tableTag parameters.
 
 ---
 
@@ -19,7 +19,7 @@ This file demonstrates all table-based progress-tracker widgets as shown in the 
 
 ## Single Progress Bar (Table)
 
-```progress-tracker
+```table-dashboard
 type: progress_bar
 source: current-file
 tableTag: weekly
@@ -35,7 +35,7 @@ label: Weekly Exercise Progress
 
 ## Multi-Widget Dashboard (Table)
 
-```progress-tracker
+```table-dashboard
 layout: compact-list
 source: current-file
 tableTag: weekly
@@ -78,7 +78,7 @@ label: 🧘 Meditation
 | Pushups  | 25   |
 | Situps   | 30   |
 
-```progress-tracker
+```table-dashboard
 type: counter
 source: current-file
 tableTag: reps
@@ -100,7 +100,7 @@ label: Total Pushups
 |----------|---------|------|
 | Running  | 8       | 20   |
 
-```progress-tracker
+```table-dashboard
 type: progress_bar
 source: current-file
 tableTag: goals

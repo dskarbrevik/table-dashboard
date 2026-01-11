@@ -18,9 +18,9 @@ export default class HabitTrackerPlugin extends Plugin {
 		this.scanner = new FileScanner(this.app.vault);
 		this.renderer = new TrackerRenderer();
 
-		// Register the progress-tracker code block processor
+		// Register the table-dashboard code block processor
 		this.registerMarkdownCodeBlockProcessor(
-			'progress-tracker',
+			'table-dashboard',
 			this.processTrackerCodeBlock.bind(this)
 		);
 
@@ -63,7 +63,7 @@ export default class HabitTrackerPlugin extends Plugin {
 	}
 
 	/**
-	 * Process a progress-tracker code block
+	 * Process a table-dashboard code block
 	 */
 	private async processTrackerCodeBlock(
 		source: string,
@@ -85,9 +85,8 @@ export default class HabitTrackerPlugin extends Plugin {
 			}
 		} catch (error) {
 			const message = error instanceof Error ? error.message : String(error);
-			el.createDiv({ cls: 'habit-tracker-error' })
-				.textContent = `Error: ${message}`;
-			console.error('Habit Tracker error:', error);
+			this.renderError(el, message);
+			console.error('Table Dashboard error:', error);
 		}
 	}
 
@@ -163,61 +162,103 @@ export default class HabitTrackerPlugin extends Plugin {
 		trackerSections: string[] 
 	} {
 		const blockConfig: { layout?: string; gridColumns?: number; source?: string; tableTag?: string } = {};
-		const lines = source.split('\n');
 		
-		// Find where the first tracker starts (first line with "type:")
-		let firstTrackerIndex = lines.findIndex(line => {
-			const trimmed = line.trim();
-			return trimmed.startsWith('type:') || trimmed.startsWith('type :');
-		});
+		// Block-level only attributes (not widget-specific)
+		const blockOnlyAttrs = ['layout', 'gridcolumns', 'grid_columns'];
+		// Attributes that are widget-specific (indicate a tracker section)
+		const widgetAttrs = ['type', 'keycolumn', 'key_column', 'valuecolumn', 'value_column', 
+			'key', 'value', 'pattern', 'goal', 'goalcolumn', 'goal_column', 'aggregate', 
+			'useregex', 'use_regex', 'period', 'label'];
+		// Attributes that can be block-level defaults OR widget-specific
+		const sharedAttrs = ['source', 'tabletag', 'table_tag'];
 		
-		// If no "type:" found, treat entire source as one tracker
-		if (firstTrackerIndex === -1) {
-			return { blockConfig, trackerSections: [source] };
+		// First, check if there are multiple widgets (separated by ---)
+		let sections: string[];
+		if (source.includes('\n---')) {
+			sections = source.split(/\n---+\s*\n?/);
+		} else {
+			sections = [source];
+		}
+		sections = sections.filter(s => s.trim());
+		
+		// If only one section, it's a single widget - no block config parsing needed
+		if (sections.length === 1) {
+			return { blockConfig, trackerSections: sections };
 		}
 		
-		// Parse block-level parameters (everything before first "type:")
-		for (let i = 0; i < firstTrackerIndex; i++) {
-			const line = lines[i];
-			if (!line) continue;
+		// Multiple sections - first section may contain block-level config
+		// Block-level config is lines that appear BEFORE any widget-specific attr
+		const firstSection = sections[0]!;
+		const lines = firstSection.split('\n');
+		const blockLines: string[] = [];
+		const widgetLines: string[] = [];
+		let foundWidgetAttr = false;
+		
+		for (const line of lines) {
 			const trimmed = line.trim();
-			if (!trimmed || trimmed.startsWith('#')) continue;
+			if (!trimmed || trimmed.startsWith('#')) {
+				// Preserve empty lines and comments in current section
+				if (foundWidgetAttr) {
+					widgetLines.push(line);
+				}
+				continue;
+			}
 			
 			const colonIndex = trimmed.indexOf(':');
-			if (colonIndex === -1) continue;
+			if (colonIndex === -1) {
+				if (foundWidgetAttr) widgetLines.push(line);
+				continue;
+			}
 			
 			const key = trimmed.substring(0, colonIndex).trim().toLowerCase();
 			const value = trimmed.substring(colonIndex + 1).trim();
 			
-			if (key === 'layout') {
-				blockConfig.layout = value;
-			} else if (key === 'gridcolumns' || key === 'grid_columns') {
-				blockConfig.gridColumns = parseInt(value, 10);
-			} else if (key === 'source') {
-				blockConfig.source = value;
-			} else if (key === 'tabletag' || key === 'table_tag') {
-				blockConfig.tableTag = value;
+			// Check if this is a widget-specific attribute
+			if (widgetAttrs.includes(key)) {
+				foundWidgetAttr = true;
+				widgetLines.push(line);
+			} else if (blockOnlyAttrs.includes(key)) {
+				// Block-only attribute - always goes to block config
+				if (key === 'layout') {
+					blockConfig.layout = value;
+				} else if (key === 'gridcolumns' || key === 'grid_columns') {
+					blockConfig.gridColumns = parseInt(value, 10);
+				}
+				if (foundWidgetAttr) {
+					// Also include in widget in case someone puts it after type:
+					widgetLines.push(line);
+				}
+			} else if (sharedAttrs.includes(key)) {
+				// Shared attributes - if before any widget attr, it's block-level default
+				if (!foundWidgetAttr) {
+					if (key === 'source') {
+						blockConfig.source = value;
+					} else if (key === 'tabletag' || key === 'table_tag') {
+						blockConfig.tableTag = value;
+					}
+				} else {
+					widgetLines.push(line);
+				}
+			} else {
+				// Unknown attribute - include in widget section
+				if (foundWidgetAttr) widgetLines.push(line);
 			}
 		}
 		
-		// Get tracker content (from first "type:" onward)
-		const trackerContent = lines.slice(firstTrackerIndex).join('\n');
-		
-		// Split into individual tracker sections
-		let trackerSections: string[];
-		if (trackerContent.includes('\n---\n')) {
-			trackerSections = trackerContent.split('\n---\n');
-		} else if (trackerContent.includes('\n--- \n')) {
-			trackerSections = trackerContent.split('\n--- \n');
-		} else if (trackerContent.includes('\n---')) {
-			trackerSections = trackerContent.split(/\n---+\s*\n/);
-		} else {
-			trackerSections = [trackerContent];
+		// Rebuild tracker sections
+		const trackerSections: string[] = [];
+		if (widgetLines.length > 0) {
+			trackerSections.push(widgetLines.join('\n'));
+		}
+		// Add remaining sections
+		for (let i = 1; i < sections.length; i++) {
+			const section = sections[i];
+			if (section) {
+				trackerSections.push(section);
+			}
 		}
 		
-		trackerSections = trackerSections.filter(s => s.trim());
-		
-		return { blockConfig, trackerSections };
+		return { blockConfig, trackerSections: trackerSections.filter(s => s.trim()) };
 	}
 
 	/**
@@ -353,6 +394,120 @@ export default class HabitTrackerPlugin extends Plugin {
 		}
 
 		return config as TrackerConfig;
+	}
+
+	/**
+	 * Render a helpful error message with guidance
+	 */
+	private renderError(el: HTMLElement, message: string): void {
+		const errorContainer = el.createDiv({ cls: 'habit-tracker-error' });
+		
+		// Error header
+		const header = errorContainer.createDiv({ cls: 'habit-tracker-error-header' });
+		header.createSpan({ cls: 'habit-tracker-error-icon', text: '⚠️' });
+		header.createSpan({ cls: 'habit-tracker-error-title', text: 'Configuration Error' });
+		
+		// Error message
+		const messageEl = errorContainer.createDiv({ cls: 'habit-tracker-error-message' });
+		messageEl.textContent = message;
+		
+		// Helpful guidance based on error type
+		const guidance = this.getErrorGuidance(message);
+		if (guidance) {
+			const guidanceEl = errorContainer.createDiv({ cls: 'habit-tracker-error-guidance' });
+			guidanceEl.createDiv({ cls: 'habit-tracker-error-guidance-title', text: '💡 How to fix:' });
+			const list = guidanceEl.createEl('ul');
+			for (const tip of guidance) {
+				list.createEl('li', { text: tip });
+			}
+		}
+		
+		// Example snippet
+		const example = this.getErrorExample(message);
+		if (example) {
+			const exampleEl = errorContainer.createDiv({ cls: 'habit-tracker-error-example' });
+			exampleEl.createDiv({ cls: 'habit-tracker-error-example-title', text: '📋 Example:' });
+			const pre = exampleEl.createEl('pre');
+			pre.createEl('code', { text: example });
+		}
+	}
+
+	/**
+	 * Get guidance tips based on error message
+	 */
+	private getErrorGuidance(message: string): string[] | null {
+		if (message.includes('Missing required field: type')) {
+			return [
+				'Add a "type:" line with one of: progress_bar, counter, percentage, streak, line_plot',
+				'The type determines how your data is visualized'
+			];
+		}
+		if (message.includes('Missing required field: source')) {
+			return [
+				'Add a "source:" line to specify where to find your data',
+				'Use "current-file" to scan the file containing this block',
+				'Use "file:path/to/file.md" to scan a specific file',
+				'Use "folder:Daily Notes" to scan all files in a folder'
+			];
+		}
+		if (message.includes('keyColumn is required')) {
+			return [
+				'Add "keyColumn:" with the name of your table\'s identifier column',
+				'This is typically the first column (e.g., "Activity", "Task", "Habit")'
+			];
+		}
+		if (message.includes('valueColumn is required')) {
+			return [
+				'Add "valueColumn:" with the name of the column to read values from',
+				'This is the column containing your data (e.g., "Done", "Status", "Reps")'
+			];
+		}
+		if (message.includes('value is required for table mode')) {
+			return [
+				'Add "value:" to specify what to look for in cells',
+				'Use "✓" or "done" to match specific text',
+				'Use "numeric" to extract and aggregate numbers',
+				'Use "any" to count any non-empty cell'
+			];
+		}
+		if (message.includes('Either table mode')) {
+			return [
+				'You must use either Table mode OR Pattern mode',
+				'Table mode: add keyColumn, valueColumn, and value',
+				'Pattern mode: add pattern (text to search for in files)'
+			];
+		}
+		return null;
+	}
+
+	/**
+	 * Get an example snippet based on error message
+	 */
+	private getErrorExample(message: string): string | null {
+		if (message.includes('Missing required field: type') || message.includes('Missing required field: source')) {
+			return `type: progress_bar
+source: current-file
+keyColumn: Activity
+valueColumn: Done
+value: "✓"
+goal: 5
+label: My Tracker`;
+		}
+		if (message.includes('keyColumn') || message.includes('valueColumn') || message.includes('value is required')) {
+			return `keyColumn: Activity
+valueColumn: Done
+value: "✓"`;
+		}
+		if (message.includes('Either table mode')) {
+			return `# Table mode:
+keyColumn: Activity
+valueColumn: Done
+value: "✓"
+
+# OR Pattern mode:
+pattern: "- [x] Exercise"`;
+		}
+		return null;
 	}
 
 	/**

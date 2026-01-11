@@ -272,12 +272,80 @@ If your plugin does not need CSS, delete this file.
 /* Error Styles */
 .habit-tracker-error {
 	padding: 1em;
+	background-color: var(--background-secondary);
+	border-left: 4px solid var(--text-error);
+	border-radius: 4px;
+	font-size: 0.9em;
+	margin: 0.5em 0;
+}
+
+.habit-tracker-error-header {
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+	margin-bottom: 0.75em;
+}
+
+.habit-tracker-error-icon {
+	font-size: 1.2em;
+}
+
+.habit-tracker-error-title {
+	font-weight: 600;
+	color: var(--text-error);
+}
+
+.habit-tracker-error-message {
+	padding: 0.75em;
 	background-color: var(--background-modifier-error);
-	border-left: 3px solid var(--text-error);
 	border-radius: 4px;
 	color: var(--text-error);
 	font-family: var(--font-monospace);
-	font-size: 0.9em;
+	margin-bottom: 0.75em;
+}
+
+.habit-tracker-error-guidance {
+	margin-bottom: 0.75em;
+}
+
+.habit-tracker-error-guidance-title {
+	font-weight: 500;
+	margin-bottom: 0.25em;
+	color: var(--text-muted);
+}
+
+.habit-tracker-error-guidance ul {
+	margin: 0.5em 0 0 1.5em;
+	padding: 0;
+}
+
+.habit-tracker-error-guidance li {
+	margin: 0.25em 0;
+	color: var(--text-normal);
+}
+
+.habit-tracker-error-example {
+	margin-top: 0.5em;
+}
+
+.habit-tracker-error-example-title {
+	font-weight: 500;
+	margin-bottom: 0.25em;
+	color: var(--text-muted);
+}
+
+.habit-tracker-error-example pre {
+	margin: 0.5em 0 0 0;
+	padding: 0.75em;
+	background-color: var(--background-primary-alt);
+	border-radius: 4px;
+	overflow-x: auto;
+}
+
+.habit-tracker-error-example code {
+	font-family: var(--font-monospace);
+	font-size: 0.85em;
+	color: var(--text-normal);
 }
 
 /* Line Plot Styles */

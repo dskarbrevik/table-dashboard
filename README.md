@@ -17,6 +17,7 @@ Create dynamic dashboard visualizations from your markdown tables. Progress bars
 - 📅 **Time Periods**: Daily, weekly, monthly, yearly, or all-time filtering
 - 🎨 **Layout Options**: Grid or compact-list for multi-widget dashboards
 - ➕ **Aggregation**: Count, sum, average, min, max
+- 🛠️ **Helpful Errors**: Clear guidance and examples when configuration is incorrect
 
 ## Installation
 
@@ -45,6 +46,7 @@ Visualize data from a table in the current file:
 
 ```markdown
 <!-- table-tag: weekly -->
+
 | Activity | Done |
 |----------|------|
 | Exercise | ✓    |
@@ -53,7 +55,7 @@ Visualize data from a table in the current file:
 
 ````
 
-```progress-tracker
+```table-dashboard
 type: progress_bar
 source: current-file
 tableTag: weekly
@@ -74,7 +76,7 @@ label: Weekly Exercise
 Multiple trackers in one block with compact layout:
 
 ```
-````progress-tracker
+````table-dashboard
 layout: compact-list
 source: current-file
 tableTag: weekly
@@ -116,7 +118,7 @@ label: 🧘 Meditation
 Scan tables in the file containing the tracker block:
 
 ````
-```progress-tracker
+```table-dashboard
 type: progress_bar
 source: current-file
 keyColumn: Activity
@@ -132,7 +134,7 @@ label: Exercise Progress
 Scan tables in a specific file (useful for dashboards):
 
 ````
-```progress-tracker
+```table-dashboard
 type: progress_bar
 source: file:Trackers/Monthly Habits.md
 keyColumn: Activity
@@ -149,7 +151,7 @@ label: Monthly Exercise
 Scan multiple files in a folder, counting text pattern occurrences:
 
 ````
-```progress-tracker
+```table-dashboard
 type: streak
 source: folder:Daily Notes
 pattern: "- [x] Meditation"
@@ -174,7 +176,7 @@ Tables require a **key column** (to identify rows) and a **value column** (to ex
 ```
 
 ````
-```progress-tracker
+```table-dashboard
 type: counter
 source: current-file
 keyColumn: Activity
@@ -191,18 +193,20 @@ Filter which tables to scan using HTML comment tags:
 
 ```markdown
 <!-- table-tag: weekly -->
+
 | Activity | Done |
 |----------|------|
 | Exercise | ✓    |
 
 <!-- table-tag: monthly -->
+
 | Activity | Done |
 |----------|------|
 | Project  | ✓    |
 ```
 
 ````
-```progress-tracker
+```table-dashboard
 type: counter
 source: current-file
 tableTag: weekly
@@ -240,6 +244,7 @@ Sum numeric values from a table:
 
 ```markdown
 <!-- table-tag: reps -->
+
 | Activity | Reps |
 |----------|------|
 | Pushups  | 25   |
@@ -247,7 +252,7 @@ Sum numeric values from a table:
 ```
 
 ````
-```progress-tracker
+```table-dashboard
 type: counter
 source: current-file
 tableTag: reps
@@ -266,12 +271,13 @@ Extract goals from a table column:
 
 ```markdown
 <!-- table-tag: goals -->
+
 | Activity | Current | Goal |
 |----------|---------|------|
 | Running  | 8       | 20   |
 ```
 
-```progress-tracker
+```table-dashboard
 type: progress_bar
 source: current-file
 tableTag: goals
@@ -302,29 +308,56 @@ label: Running Progress
 ### Grid Layout (Default)
 
 ````
-```progress-tracker
+```table-dashboard
 layout: grid
 gridColumns: 2
+source: current-file
+tableTag: weekly
 
 type: progress_bar
-...
+keyColumn: Activity
+key: Exercise
+valueColumn: Done
+value: "✓"
+goal: 5
+label: Exercise
+
 ---
+
 type: counter
-...
+keyColumn: Activity
+key: Reading
+valueColumn: Done
+value: "✓"
+label: Reading
 ```
 ````
 
 ### Compact List
 
 ````
-```progress-tracker
+```table-dashboard
 layout: compact-list
+source: current-file
+tableTag: weekly
 
 type: progress_bar
-...
+keyColumn: Activity
+key: Exercise
+valueColumn: Done
+value: "✓"
+goal: 5
+label: Exercise
+
 ---
+
 type: progress_bar
-...
+keyColumn: Activity
+key: Reading
+valueColumn: Done
+value: "✓"
+goal: 3
+label: Reading
 ```
 ````
 
@@ -378,6 +411,29 @@ Apply to entire dashboard (before first `type:`):
 ## Examples
 
 See [`examples/widget-screenshot-demo.md`](examples/widget-screenshot-demo.md) for ready-to-use templates.
+
+## Error Handling
+
+When you misconfigure a widget, the plugin displays helpful error messages with guidance on how to fix the issue.
+
+**Example: Missing required fields**
+
+````
+```table-dashboard
+type: counter
+source: current-file
+keyColumn: Activity
+```
+````
+
+This configuration is missing `valueColumn` and `value`, which are required for table mode. Instead of a cryptic error, you'll see:
+
+![Error Guidance Example](assets/error-guidance-example.png)
+
+The error display includes:
+- ⚠️ Clear description of what's wrong
+- 💡 Step-by-step guidance on how to fix it
+- 📋 Example code snippet showing correct syntax
 
 ## Troubleshooting
 
