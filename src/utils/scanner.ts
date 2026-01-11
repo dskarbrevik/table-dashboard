@@ -426,6 +426,7 @@ export class FileScanner {
 
 		return files.filter(file => {
 			const fileDate = this.extractDateFromFilename(file.basename);
+			// If file has no date in filename, exclude it from time-based filtering
 			if (!fileDate) return false;
 			return moment(fileDate).isSameOrAfter(startOfPeriod);
 		});

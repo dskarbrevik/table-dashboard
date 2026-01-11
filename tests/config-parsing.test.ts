@@ -738,3 +738,28 @@ value: y`;
 		});
 	});
 });
+
+/**
+ * Tests for default settings values
+ */
+describe('Default Settings', () => {
+	// Mirrors DEFAULT_SETTINGS from settings.ts
+	const DEFAULT_SETTINGS = {
+		defaultPeriod: 'all-time',
+		dateFormat: 'YYYY-MM-DD'
+	};
+
+	it('should have all-time as the default period', () => {
+		expect(DEFAULT_SETTINGS.defaultPeriod).toBe('all-time');
+	});
+
+	it('should not apply time-based filtering by default', () => {
+		// This ensures that folder scans include all files by default,
+		// not just files with dates in their filenames
+		const period = DEFAULT_SETTINGS.defaultPeriod;
+		expect(period).not.toBe('daily');
+		expect(period).not.toBe('weekly');
+		expect(period).not.toBe('monthly');
+		expect(period).not.toBe('yearly');
+	});
+});

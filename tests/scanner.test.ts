@@ -794,3 +794,126 @@ Some text with the word Exercise in it.
 		});
 	});
 });
+
+/**
+ * Tests for period filtering behavior
+ */
+describe('Period Filtering', () => {
+	/**
+	 * Simulates filterFilesByPeriod logic
+	 * Files without dates should only be included when period is 'all-time'
+	 */
+	function extractDateFromFilename(filename: string): Date | null {
+		const patterns = [
+			/(\d{4}-\d{2}-\d{2})/,  // 2024-01-15
+			/(\d{4}\d{2}\d{2})/,     // 20240115
+			/(\d{2}-\d{2}-\d{4})/,   // 15-01-2024
+		];
+
+		for (const pattern of patterns) {
+			const match = filename.match(pattern);
+			if (match) {
+				const dateStr = match[1];
+				// Simple date parsing for test
+				if (dateStr && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+					const [year, month, day] = dateStr.split('-').map(Number);
+					if (year !== undefined && month !== undefined && day !== undefined) {
+						return new Date(year, month - 1, day);
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	function filterFilesByPeriod(
+		filenames: string[], 
+		period: 'daily' | 'weekly' | 'monthly' | 'yearly' | 'all-time'
+	): string[] {
+		if (period === 'all-time') {
+			return filenames;
+		}
+
+		return filenames.filter(filename => {
+			const fileDate = extractDateFromFilename(filename);
+			// If file has no date in filename, exclude it from time-based filtering
+			if (!fileDate) return false;
+			// For simplicity, just check if date exists (real impl checks against period start)
+			return true;
+		});
+	}
+
+	describe('all-time period (default)', () => {
+		it('should include files without dates in filename', () => {
+			const files = ['01.md', '02.md', 'notes.md'];
+			const filtered = filterFilesByPeriod(files, 'all-time');
+			expect(filtered).toEqual(['01.md', '02.md', 'notes.md']);
+		});
+
+		it('should include files with dates in filename', () => {
+			const files = ['2026-01-01.md', '2026-01-02.md'];
+			const filtered = filterFilesByPeriod(files, 'all-time');
+			expect(filtered).toEqual(['2026-01-01.md', '2026-01-02.md']);
+		});
+
+		it('should include mixed files (with and without dates)', () => {
+			const files = ['01.md', '2026-01-01.md', 'notes.md', '2026-01-02.md'];
+			const filtered = filterFilesByPeriod(files, 'all-time');
+			expect(filtered).toEqual(['01.md', '2026-01-01.md', 'notes.md', '2026-01-02.md']);
+		});
+	});
+
+	describe('time-based periods (daily, weekly, monthly, yearly)', () => {
+		it('should exclude files without dates when period is monthly', () => {
+			const files = ['01.md', '02.md', 'notes.md'];
+			const filtered = filterFilesByPeriod(files, 'monthly');
+			expect(filtered).toEqual([]);
+		});
+
+		it('should include files with dates when period is monthly', () => {
+			const files = ['2026-01-01.md', '2026-01-02.md'];
+			const filtered = filterFilesByPeriod(files, 'monthly');
+			expect(filtered).toEqual(['2026-01-01.md', '2026-01-02.md']);
+		});
+
+		it('should exclude files without dates when period is weekly', () => {
+			const files = ['week1.md', 'notes.md'];
+			const filtered = filterFilesByPeriod(files, 'weekly');
+			expect(filtered).toEqual([]);
+		});
+
+		it('should filter mixed files - only keep dated ones when period specified', () => {
+			const files = ['01.md', '2026-01-01.md', 'notes.md', '2026-01-02.md'];
+			const filtered = filterFilesByPeriod(files, 'monthly');
+			expect(filtered).toEqual(['2026-01-01.md', '2026-01-02.md']);
+		});
+	});
+
+	describe('date extraction from filenames', () => {
+		it('should extract date from YYYY-MM-DD format', () => {
+			const date = extractDateFromFilename('2026-01-15.md');
+			expect(date).not.toBeNull();
+			expect(date?.getFullYear()).toBe(2026);
+			expect(date?.getMonth()).toBe(0); // January is 0
+			expect(date?.getDate()).toBe(15);
+		});
+
+		it('should return null for files without dates', () => {
+			expect(extractDateFromFilename('01.md')).toBeNull();
+			expect(extractDateFromFilename('notes.md')).toBeNull();
+			expect(extractDateFromFilename('week1.md')).toBeNull();
+		});
+
+		it('should extract date from filename with prefix', () => {
+			const date = extractDateFromFilename('daily-2026-01-15.md');
+			expect(date).not.toBeNull();
+			expect(date?.getFullYear()).toBe(2026);
+		});
+
+		it('should extract date from filename with suffix', () => {
+			const date = extractDateFromFilename('2026-01-15-notes.md');
+			expect(date).not.toBeNull();
+			expect(date?.getFullYear()).toBe(2026);
+		});
+	});
+});

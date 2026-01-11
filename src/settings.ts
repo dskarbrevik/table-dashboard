@@ -6,7 +6,7 @@ import { HabitTrackerSettings } from "./types";
 const DATE_FORMAT_EXAMPLE = 'YYYY-MM-DD';
 
 export const DEFAULT_SETTINGS: HabitTrackerSettings = {
-	defaultPeriod: 'monthly',
+	defaultPeriod: 'all-time',
 	dateFormat: DATE_FORMAT_EXAMPLE
 }
 
