@@ -3,7 +3,7 @@
 	"name": "Table Dashboard",
 	"version": "1.0.2",
 	"minAppVersion": "0.15.0",
-	"description": "Dashboard visualizations from markdown tables.",
+	"description": "Create dynamic dashboard visualizations from your markdown tables.",
 	"author": "Data Goose",
 	"authorUrl": "https://github.com/dskarbrevik",
 	"isDesktopOnly": false
