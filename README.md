@@ -51,7 +51,9 @@ Visualize data from a table in the current file:
 | Reading  | ✓    |
 ```
 
-````progress-tracker
+````
+
+```progress-tracker
 type: progress_bar
 source: current-file
 tableTag: weekly
@@ -61,6 +63,8 @@ valueColumn: Done
 value: "✓"
 goal: 5
 label: Weekly Exercise
+```
+
 ````
 
 ![Progress Bar Example](assets/progress-bar-example.png)
@@ -69,6 +73,7 @@ label: Weekly Exercise
 
 Multiple trackers in one block with compact layout:
 
+```
 ````progress-tracker
 layout: compact-list
 source: current-file
@@ -99,6 +104,7 @@ key: Meditation
 valueColumn: Done
 value: "✓"
 label: 🧘 Meditation
+```
 ````
 
 ![Multi-Widget Dashboard Example](assets/dashboard-example.png)
@@ -109,7 +115,8 @@ label: 🧘 Meditation
 
 Scan tables in the file containing the tracker block:
 
-````progress-tracker
+````
+```progress-tracker
 type: progress_bar
 source: current-file
 keyColumn: Activity
@@ -117,13 +124,15 @@ key: Exercise
 valueColumn: Done
 value: "✓"
 label: Exercise Progress
+```
 ````
 
 ### Specific File
 
 Scan tables in a specific file (useful for dashboards):
 
-````progress-tracker
+````
+```progress-tracker
 type: progress_bar
 source: file:Trackers/Monthly Habits.md
 keyColumn: Activity
@@ -132,18 +141,21 @@ valueColumn: Done
 value: "✓"
 goal: 20
 label: Monthly Exercise
+```
 ````
 
 ### Folder (Pattern Mode)
 
 Scan multiple files in a folder, counting text pattern occurrences:
 
-````progress-tracker
+````
+```progress-tracker
 type: streak
 source: folder:Daily Notes
 pattern: "- [x] Meditation"
 period: monthly
 label: Meditation Streak
+```
 ````
 
 **Note:** For folder mode, filenames should include dates in `YYYY-MM-DD` format for period filtering and streak calculation.
@@ -161,7 +173,8 @@ Tables require a **key column** (to identify rows) and a **value column** (to ex
 | Reading  | ✓    |
 ```
 
-````progress-tracker
+````
+```progress-tracker
 type: counter
 source: current-file
 keyColumn: Activity
@@ -169,6 +182,7 @@ key: Exercise
 valueColumn: Done
 value: "✓"
 label: Exercise Count
+```
 ````
 
 ### Table Tagging
@@ -187,7 +201,8 @@ Filter which tables to scan using HTML comment tags:
 | Project  | ✓    |
 ```
 
-````progress-tracker
+````
+```progress-tracker
 type: counter
 source: current-file
 tableTag: weekly
@@ -196,6 +211,7 @@ key: Exercise
 valueColumn: Done
 value: "✓"
 label: Weekly Exercise
+```
 ````
 
 ### Value Types
@@ -230,7 +246,8 @@ Sum numeric values from a table:
 | Situps   | 30   |
 ```
 
-````progress-tracker
+````
+```progress-tracker
 type: counter
 source: current-file
 tableTag: reps
@@ -240,6 +257,7 @@ valueColumn: Reps
 value: numeric
 aggregate: sum
 label: Total Pushups
+```
 ````
 
 ### Dynamic Goals
@@ -253,7 +271,7 @@ Extract goals from a table column:
 | Running  | 8       | 20   |
 ```
 
-````progress-tracker
+```progress-tracker
 type: progress_bar
 source: current-file
 tableTag: goals
@@ -264,6 +282,7 @@ value: numeric
 aggregate: sum
 goalColumn: Goal
 label: Running Progress
+```
 ````
 
 ![Dynamic Goal Example](assets/dynamic-goal-example.png)
@@ -282,7 +301,8 @@ label: Running Progress
 
 ### Grid Layout (Default)
 
-````progress-tracker
+````
+```progress-tracker
 layout: grid
 gridColumns: 2
 
@@ -291,11 +311,13 @@ type: progress_bar
 ---
 type: counter
 ...
+```
 ````
 
 ### Compact List
 
-````progress-tracker
+````
+```progress-tracker
 layout: compact-list
 
 type: progress_bar
@@ -303,6 +325,7 @@ type: progress_bar
 ---
 type: progress_bar
 ...
+```
 ````
 
 ## Configuration Reference
