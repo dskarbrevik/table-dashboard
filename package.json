@@ -1,6 +1,6 @@
 {
 	"name": "table-dashboard",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "Dashboard visualizations from markdown tables.",
 	"main": "main.js",
 	"type": "module",
