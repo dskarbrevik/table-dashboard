@@ -20,8 +20,6 @@ export class HabitTrackerSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', { text: 'Habit Progress Tracker Settings' });
-
 		new Setting(containerEl)
 			.setName('Default time period')
 			.setDesc('Default period for trackers when not specified')

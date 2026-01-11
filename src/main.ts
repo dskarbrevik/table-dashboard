@@ -74,17 +74,12 @@ export default class HabitTrackerPlugin extends Plugin {
 			// Parse block-level config and tracker sections
 			const { blockConfig, trackerSections } = this.parseBlockAndTrackers(source);
 			
-			console.log('Tracker sections found:', trackerSections.length);
-			console.log('Block config:', blockConfig);
-			
 			if (trackerSections.length > 1) {
 				// Multiple trackers - create dashboard
-				console.log('Rendering dashboard with', trackerSections.length, 'trackers');
 				const configs = trackerSections.map(section => this.parseTrackerConfig(section, blockConfig));
 				await this.renderDashboard(el, configs, ctx, blockConfig);
 			} else {
 				// Single tracker
-				console.log('Rendering single tracker');
 				const config = this.parseTrackerConfig(trackerSections[0] || '', blockConfig);
 				await this.renderSingleTracker(el, config, ctx);
 			}
