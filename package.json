@@ -1,6 +1,6 @@
 {
 	"name": "table-dashboard",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Dashboard visualizations from markdown tables.",
 	"main": "main.js",
 	"type": "module",
@@ -13,7 +13,7 @@
 		"test:watch": "jest --watch"
 	},
 	"keywords": [],
-	"license": "0-BSD",
+	"license": "MIT",
 	"devDependencies": {
 		"@eslint/js": "9.30.1",
 		"@types/jest": "^30.0.0",
