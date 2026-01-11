@@ -31,7 +31,7 @@ export class HabitTrackerSettingTab extends PluginSettingTab {
 				.addOption('all-time', 'All-time')
 				.setValue(this.plugin.settings.defaultPeriod)
 				.onChange(async (value) => {
-					this.plugin.settings.defaultPeriod = value as any;
+					this.plugin.settings.defaultPeriod = value as HabitTrackerSettings['defaultPeriod'];
 					await this.plugin.saveSettings();
 				}));
 

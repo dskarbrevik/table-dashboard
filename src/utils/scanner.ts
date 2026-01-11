@@ -45,8 +45,10 @@ export class FileScanner {
 				return await this.scanSpecificFile(config, path!);
 			case 'folder':
 				return await this.scanFolder(config, path!);
-			default:
-				throw new Error(`Unknown source type: ${type}`);
+			default: {
+				const exhaustiveCheck: never = type;
+				throw new Error(`Unknown source type: ${exhaustiveCheck}`);
+			}
 		}
 	}
 
@@ -104,7 +106,7 @@ export class FileScanner {
 	 * Scan all files in a folder
 	 */
 	private async scanFolder(config: TrackerConfig, folderPath: string): Promise<TrackerData> {
-		const files = await this.getFilesInFolder(folderPath);
+		const files = this.getFilesInFolder(folderPath);
 		const filteredFiles = this.filterFilesByPeriod(files, config.period || 'all-time');
 		
 		const allValues: number[] = [];
@@ -393,7 +395,7 @@ export class FileScanner {
 	/**
 	 * Get all markdown files in a folder
 	 */
-	private async getFilesInFolder(folderPath: string): Promise<TFile[]> {
+	private getFilesInFolder(folderPath: string): TFile[] {
 		const abstractFile = this.vault.getAbstractFileByPath(folderPath);
 		
 		if (!abstractFile || !(abstractFile instanceof TFolder)) {

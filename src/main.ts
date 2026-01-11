@@ -30,21 +30,21 @@ export default class HabitTrackerPlugin extends Plugin {
 		// Listen for file modifications to update trackers
 		this.registerEvent(
 			this.app.vault.on('modify', () => {
-				this.refreshAllTrackers();
+				void this.refreshAllTrackers();
 			})
 		);
 
 		// Listen for file creation
 		this.registerEvent(
 			this.app.vault.on('create', () => {
-				this.refreshAllTrackers();
+				void this.refreshAllTrackers();
 			})
 		);
 
 		// Listen for file deletion
 		this.registerEvent(
 			this.app.vault.on('delete', () => {
-				this.refreshAllTrackers();
+				void this.refreshAllTrackers();
 			})
 		);
 	}
@@ -190,7 +190,6 @@ export default class HabitTrackerPlugin extends Plugin {
 		// Block-level config is lines that appear BEFORE any widget-specific attr
 		const firstSection = sections[0]!;
 		const lines = firstSection.split('\n');
-		const blockLines: string[] = [];
 		const widgetLines: string[] = [];
 		let foundWidgetAttr = false;
 		
@@ -405,7 +404,7 @@ export default class HabitTrackerPlugin extends Plugin {
 		// Error header
 		const header = errorContainer.createDiv({ cls: 'habit-tracker-error-header' });
 		header.createSpan({ cls: 'habit-tracker-error-icon', text: '⚠️' });
-		header.createSpan({ cls: 'habit-tracker-error-title', text: 'Configuration Error' });
+		header.createSpan({ cls: 'habit-tracker-error-title', text: 'Configuration error' });
 		
 		// Error message
 		const messageEl = errorContainer.createDiv({ cls: 'habit-tracker-error-message' });
@@ -415,7 +414,7 @@ export default class HabitTrackerPlugin extends Plugin {
 		const guidance = this.getErrorGuidance(message);
 		if (guidance) {
 			const guidanceEl = errorContainer.createDiv({ cls: 'habit-tracker-error-guidance' });
-			guidanceEl.createDiv({ cls: 'habit-tracker-error-guidance-title', text: '💡 How to fix:' });
+			guidanceEl.createDiv({ cls: 'habit-tracker-error-guidance-title', text: '💡 How to fix' });
 			const list = guidanceEl.createEl('ul');
 			for (const tip of guidance) {
 				list.createEl('li', { text: tip });
@@ -426,7 +425,7 @@ export default class HabitTrackerPlugin extends Plugin {
 		const example = this.getErrorExample(message);
 		if (example) {
 			const exampleEl = errorContainer.createDiv({ cls: 'habit-tracker-error-example' });
-			exampleEl.createDiv({ cls: 'habit-tracker-error-example-title', text: '📋 Example:' });
+			exampleEl.createDiv({ cls: 'habit-tracker-error-example-title', text: '📋 Example' });
 			const pre = exampleEl.createEl('pre');
 			pre.createEl('code', { text: example });
 		}
